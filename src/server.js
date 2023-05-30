@@ -1,21 +1,28 @@
-import { Readable } from 'node:stream'
+import http from 'node:http'
 
-class OneToHundred extends Readable {
-        index = 1
-    
-    _read() {
+const users = []
 
-    setTimeout(() => {
-        const i = this.index++
-            
-            if (i > 100) {
-                this.push(null)
-            } else {
-                this.push(String(i))
-            }
-        }, 1000);
+const server = http.createServer((req, res) => {
+    const {method, url} = req
+
+    if (method === 'GET' && url === '/users') {
+        return res
+                .setHeader('Content-type', 'application/json')
+                .end(JSON.stringify(users))
     }
-        
-}
 
-new OneToHundred().pipe(process.stdout)
+    if (method === 'POST' && url === '/users') {
+        const user = {
+            name: 'Marcelo',
+            age: 44
+        }
+
+        users.push(user)
+
+        return res.writeHead('201').end()
+    }    
+
+    return res.writeHead('404').end()
+})
+
+server.listen('3333', console.log('running at 3333'));

@@ -1,2 +1,3 @@
 # 2023_node-stream
-Estudo sobre Streams no NodeJS
+
+Ignite Rocketseat Node.js 2023
