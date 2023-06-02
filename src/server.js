@@ -2,27 +2,40 @@ import http from 'node:http'
 
 const users = []
 
-const server = http.createServer((req, res) => {
-    const {method, url} = req
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req
 
-    if (method === 'GET' && url === '/users') {
-        return res
-                .setHeader('Content-type', 'application/json')
-                .end(JSON.stringify(users))
-    }
+  const buffers = []
 
-    if (method === 'POST' && url === '/users') {
-        const user = {
-            name: 'Marcelo',
-            age: 44
-        }
+  for await (const chunk of req) {
+    buffers.push(chunk)
+  }
 
-        users.push(user)
+  try {
+    req.body = JSON.parse(Buffer.concat(buffers).toString())
+  } catch {
+    req.body = null
+  }
 
-        return res.writeHead('201').end()
-    }    
+  if (method === 'GET' && url === '/users') {
+    return res
+      .setHeader('Content-type', 'application/json')
+      .end(JSON.stringify(users))
+  }
 
-    return res.writeHead('404').end()
+  if (method === 'POST' && url === '/users') {
+    const { name, email } = req.body
+
+    users.push({
+      id: 1,
+      name,
+      email,
+    })
+
+    return res.writeHead(201).end()
+  }
+
+  return res.writeHead(404).end()
 })
 
-server.listen('3333', console.log('running at 3333'));
+server.listen(3333)
