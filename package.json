@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/Marcelovqvd/2023_node-stream/issues"
   },
-  "homepage": "https://github.com/Marcelovqvd/2023_node-stream#readme"
+  "homepage": "https://github.com/Marcelovqvd/2023_node-stream#readme",
+  "devDependencies": {
+    "eslint": "^8.42.0",
+    "eslint-config-google": "^0.14.0"
+  }
 }
